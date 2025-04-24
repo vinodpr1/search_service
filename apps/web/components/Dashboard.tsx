@@ -32,7 +32,15 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('kaufen');
   const [currentPage, setCurrentPage] = useState(1);
   const [property, setProperty] = useState<Property[]>([]);
+  const [filterProperty, setFilterProperty] = useState<Property[]>([]);
   const [totalPages, setTotalPage] = useState<number | null>(null);
+
+  const [trasnitionOpen, setTrasnitionOpen] = useState(false);
+  const [transactionType, setTransactionType] = useState('');
+  const [locationOpen, setLocationOpen] = useState(false);
+  const [location, setLocation] = useState('');
+  const [typeOpen, setTypeOpen] = useState(false);
+  const [type, setType] = useState('');
 
 
   const handlePageChange = (page: any) => {
@@ -45,25 +53,60 @@ export default function Dashboard() {
   useEffect(() => {
     const getProperty = async () => {
       const response = await axios.get<ApiResponse>(`http://localhost:3300/api/v1/property/paginate?page=${currentPage}`);
-      console.log(response.data);
       setTotalPage(response.data.pagination.totalPages);
       setProperty(response.data.data);
+      setFilterProperty(response.data.data)
     }
     getProperty();
   }, [currentPage]);
 
-  // http://localhost:3300/api/v1/property/filter?location=1230 Wien&type=Architektenhaus&transactionType=Kaufen
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState('Kaufen');
+  useEffect(()=>{
+    const getProperty = async () => {
+      const response = await axios.get<ApiResponse>(`http://localhost:3300/api/v1/property/filter?location=${location}&type=${type}&transactionType=${transactionType}`);
+      console.log("PAGEE", response.data.data);
+      setFilterProperty(response.data.data);
+    }
+    if(location || type || transactionType){
+      getProperty();
+    }
+    
+  },[transactionType, location, type])
+
+
+
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    setTrasnitionOpen(!trasnitionOpen);
+    setLocationOpen(false);
+    setTypeOpen(false);
+  };
+
+  const toggleLocationDropdown = () => {
+    setLocationOpen(!locationOpen);
+    setTrasnitionOpen(false);
+    setTypeOpen(false);
+  };
+
+  const toggleType = () => {
+    setTypeOpen(!typeOpen);
+    setTrasnitionOpen(false);
+    setLocationOpen(false);
   };
 
   const selectOption = (option: string) => {
-    setSelected(option);
-    setIsOpen(false);
+    setTransactionType(option);
+    setTrasnitionOpen(false);
+  };
+
+  const selectLocation = (option: string) => {
+    setLocation(option);
+    setLocationOpen(false);
+  };
+
+  const selectType = (option: string) => {
+    setType(option);
+    setTypeOpen(false);
   };
 
 
@@ -71,50 +114,53 @@ export default function Dashboard() {
     <div className="max-w-6xl min-h-screen mx-auto p-4 font-sans mt-24">
 
       <div className="flex gap-2 mb-6">
-        <div className="flex-[3] border rounded flex items-center px-3 py-2">
+       
+        <div className="flex-[3] border rounded flex items-center px-3 py-2 relative">
           <MapPin size={18} className="text-gray-400 mr-2" />
           <button
-            className="flex items-center justify-between px-4 w-full text-sm border border-red-600"
-            onClick={toggleDropdown}
+            className="flex items-center justify-between px-4 w-full text-sm "
+            onClick={toggleLocationDropdown}
           >
            Locationn
           </button>
 
-          {isOpen && (
+          {locationOpen && (
             <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded mt-1 shadow-md z-10">
               <button
-                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 ${selected === "Wien" ? "bg-[#748790]" : ""}`}
-                onClick={() => selectOption('Wien')}
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                onClick={() => selectLocation('7100 Neusiedl am See')}
               >
-                Wien
+                7100 Neusiedl am See
               </button>
               <button
-                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 ${selected === "Niederösterreich" ? "bg-[#748790]" : ""}`}
-                onClick={() => selectOption('Niederösterreich')}
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                onClick={() => selectLocation('2345 Brunn am Gebirge')}
               >
-                Niederösterreich
+                2345 Brunn am Gebirge
               </button>
               <button
-                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 ${selected === "Oberösterreich" ? "bg-[#748790]" : ""}`}
-                onClick={() => selectOption('Oberösterreich')}
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                onClick={() => selectLocation('2352 Gumpoldskirchen')}
               >
-                Oberösterreich
+                2352 Gumpoldskirchen
               </button>
               <button
-                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 ${selected === "Salzburg" ? "bg-[#748790]" : ""}`}
-                onClick={() => selectOption('Salzburg')}
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                onClick={() => selectLocation('3400 Klosterneuburg')}
               >
-                Salzburg
+                3400 Klosterneuburg
               </button>
               <button
-                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 ${selected === "Tirol" ? "bg-[#748790]" : ""}`}
-                onClick={() => selectOption('Tirol')}
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                onClick={() => selectLocation('1190 Wien')}
               >
-                Tirol
+                1190 Wien
               </button>
             </div>
 
           )}
+
+          
 
         </div>
 
@@ -123,20 +169,20 @@ export default function Dashboard() {
             className="flex items-center justify-between px-4 py-2 w-full text-sm"
             onClick={toggleDropdown}
           >
-            {selected}
+            {transactionType=="Kaufen"? "Kaufen" : transactionType=="Mieten"? "Mieten" : "Transition"}
             <ChevronDown size={16} />
           </button>
         
-          {isOpen && (
+          {trasnitionOpen && (
             <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded mt-1 shadow-md z-10">
               <button
-                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 ${selected == "Kaufen" ? "bg-[#748790]" : ""}`}
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
                 onClick={() => selectOption('Kaufen')}
               >
                 Kaufen
               </button>
               <button
-                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 ${selected == "Mieten" ? "bg-[#748790]" : ""}`}
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
                 onClick={() => selectOption('Mieten')}
               >
                 Mieten
@@ -145,35 +191,73 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="flex-1 border rounded">
-          <button className="flex items-center justify-between px-4 py-2 w-full text-sm">
+        <div className="flex-1 border rounded relative">
+          <button 
+             onClick={toggleType}
+             className="flex items-center justify-between px-4 py-2 w-full text-sm">
             Type
             <ChevronDown size={16} />
           </button>
+
+          {typeOpen && (
+            <div className="absolute top-full left-0 right-0 w-full bg-white border border-gray-200 rounded mt-1 shadow-md z-10">
+              <button
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                onClick={() => selectType('Wohnung')}
+              >
+                Wohnung
+              </button>
+              <button
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                onClick={() => selectType('Haus')}
+              >
+                Haus
+              </button>
+              <button
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                onClick={() => selectType('Landhaus')}
+              >
+                Landhaus
+              </button>
+              <button
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 `}
+                onClick={() => selectType('Villa')}
+              >
+                Villa
+              </button>
+              <button
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                onClick={() => selectType('Einfamilienhaus')}
+              >
+                Einfamili
+              </button>
+            </div>
+          )}
+
         </div>
 
-        <div className="flex-1 border rounded">
+        <div className="hidden md:flex flex-1 border rounded">
           <button className="flex items-center justify-between px-4 py-2 w-full text-sm">
             Preis
             <ChevronDown size={16} />
           </button>
         </div>
 
-        <div className="flex-1 border rounded">
+        <div className="hidden md:flex flex-1 border rounded">
           <button className="flex items-center justify-between px-4 py-2 w-full text-sm">
             Fläche
             <ChevronDown size={16} />
           </button>
         </div>
 
-        <div className="flex-1 border rounded">
+        <div className="hidden md:flex flex-1 border rounded">
           <button className="flex items-center justify-between px-4 py-2 w-full text-sm">
             Zimmer
             <ChevronDown size={16} />
           </button>
         </div>
 
-        <button className="border rounded p-2">
+        <button className="hidden md:flex border rounded p-2">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
@@ -187,7 +271,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 mx-auto gap-6">
 
         {
-          property.map((item, index) => {
+          filterProperty.map((item, index) => {
             return (
               <div key={item.id} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
                 <div className="relative">

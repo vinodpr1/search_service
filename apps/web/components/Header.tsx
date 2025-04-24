@@ -29,14 +29,14 @@ const Header = () => {
                Kaufen
              </button>
              <button 
-               className={`text-sm cursor-pointer  ${activeTab === 'mieten' ? 'text-gray-800' : 'text-gray-500'}`}
+               className={`hidden md:flex text-sm cursor-pointer  ${activeTab === 'mieten' ? 'text-gray-800' : 'text-gray-500'}`}
                onClick={() => setActiveTab('mieten')}
              >
                Mieten
              </button>
-             <button className="text-sm cursor-pointer  text-gray-500">Inserat schalten</button>
+             <button className="hidden md:flex text-sm cursor-pointer  text-gray-500">Inserat schalten</button>
              <button className="bg-gray-800 cursor-pointer  text-white px-4 py-2 text-sm rounded">Sign in</button>
-             <button className="text-sm">ENG</button>
+             <button className="text-sm hidden sm:flex">ENG</button>
           </div>
       </div>
     </div>
