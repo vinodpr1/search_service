@@ -25,4 +25,13 @@ export class PropertyRepository {
       throw error;
     }
   }
+
+  async filterProperties(filters: any) {
+    try {
+      const properties = await Property.find(filters);
+      return properties;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

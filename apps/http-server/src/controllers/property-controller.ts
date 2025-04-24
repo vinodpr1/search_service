@@ -44,9 +44,34 @@ const getProperty = async (req: any, res:any) => {
   }
 };
 
+const filterProperties = async (req: any, res: any) => {
+  try {
+    const { location, type, transactionType } = req.query;
+    console.log("KKKKKKKKKKK", location, type, transactionType)
+    const filters = {
+      ...(location && { location }),
+      ...(type && { type }),
+      ...(transactionType && { transactionType })
+    };
+
+    const response = await propertyService.filterProperties(filters);
+
+    return res.status(200).json({
+      data: response,
+      success: true
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error filtering properties",
+      success: false,
+      error: error
+    });
+  }
+};
 
 
 export {
   getProperty,
-  getAllProperties
+  getAllProperties,
+  filterProperties
 };

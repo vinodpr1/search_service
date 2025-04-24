@@ -20,4 +20,12 @@ export class PropertyService {
         throw error;
       }
     }
+
+    async filterProperties(filters: any) {
+      try {
+        return await propertyRepository.filterProperties(filters);
+      } catch (error) {
+        throw error;
+      }
+    }
 }
