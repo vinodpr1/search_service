@@ -1,10 +1,15 @@
 import React from 'react'
+import Dashboard from '../components/Dashboard'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
 
 const page = () => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <main>
+      <Header/>
+      <Dashboard/>
+      <Footer/>
+    </main>
   )
 }
 

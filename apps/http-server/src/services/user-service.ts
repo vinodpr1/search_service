@@ -18,7 +18,6 @@ export class UserService {
 
     async authenticateUser(email: string, password: string) {
         try {
-          // checking a user is present in db or not
           const res = await this.getByEmail(email);
           if (!res) {
             const clientError = {
@@ -27,7 +26,9 @@ export class UserService {
             throw clientError;
           }
     
-          // is user is preset then will check for
+
+
+
           if (!res.comparePassword(password)) {
             const clientError = {
               message: "Please check your Password , we have't this pass associated with any Email",
@@ -52,9 +53,11 @@ export class UserService {
     
     async getByEmail(email: string) {
         try {
+
           const response = await userRepository.getByEmail(email);
           return response;
         } catch (error) {
+          
           console.log("Error has  occured while getting user via email");
           throw { error };
         }
