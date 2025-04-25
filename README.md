@@ -1,5 +1,7 @@
 # Property Search Application
 
+# My AWS account has been suspended so i'm unable to deploy it and vercel has very-very complex way to deploy turborepo.
+
 ## Overview
 A Next.js v15 application with App Router that provides a property search interface based on the provided Figma design, featuring location search, filters, type search, transition search, and paginated results.
 
