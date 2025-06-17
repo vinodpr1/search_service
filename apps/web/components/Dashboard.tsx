@@ -127,7 +127,7 @@ export default function Dashboard() {
           {locationOpen && (
             <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded mt-1 shadow-md z-10">
               <button
-                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
+                className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 border`}
                 onClick={() => selectLocation('7100 Neusiedl am See')}
               >
                 7100 Neusiedl am See
