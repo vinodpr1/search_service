@@ -130,7 +130,7 @@ export default function Dashboard() {
                 className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100 border`}
                 onClick={() => selectLocation('7100 Neusiedl am See')}
               >
-                7100 Neusiedl am See
+                7100 Neusiedl am See ejke
               </button>
               <button
                 className={`px-4 py-2 w-full text-left text-sm hover:bg-gray-100`}
